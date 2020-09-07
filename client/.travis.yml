@@ -1,0 +1,23 @@
+language: generic 
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t eugeniocaio10/react-test -f ./client/Dockerfile.dev ./client
+#This is where the testing will occur. If all scripts passes (i.e. they exit with a 0) then it will launch a production image
+script:
+    - ddocker run -e CI=true eugeniocaio10/react-test npm test -- --coverage
+
+after_success:
+    - docker build -t eugeniocaio10/multi-client ./client
+    - docker build -t eugeniocaio10/multi-nginx ./nginx
+    - docker build -t eugeniocaio10/multi-server ./server
+    - docker build -t eugeniocaio10/multi-worker ./worker
+
+script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker push eugeniocaio10/multi-client
+    - docker push eugeniocaio10/multi-nginx
+    - docker push eugeniocaio10/multi-server
+    - docker push eugeniocaio10/multi-worker

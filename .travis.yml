@@ -15,8 +15,6 @@ after_success:
     - docker build -t eugeniocaio10/multi-nginx ./nginx
     - docker build -t eugeniocaio10/multi-server ./server
     - docker build -t eugeniocaio10/multi-worker ./worker
-
-script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     - docker push eugeniocaio10/multi-client
     - docker push eugeniocaio10/multi-nginx

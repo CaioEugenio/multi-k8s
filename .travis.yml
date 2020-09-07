@@ -5,6 +5,7 @@ services:
 
 before_install:
     - docker build -t eugeniocaio10/react-test -f ./client/Dockerfile.dev ./client
+
 #This is where the testing will occur. If all scripts passes (i.e. they exit with a 0) then it will launch a production image
 script:
     - docker run -e CI=true eugeniocaio10/react-test npm test -- --coverage
